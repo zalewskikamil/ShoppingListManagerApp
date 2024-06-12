@@ -1,6 +1,7 @@
 
 
 
+
 # Shopping List Manager App
 
   
@@ -35,7 +36,7 @@ This is a backend Spring Boot application that allows you to create and manage s
 
   
 
-2. Build the project using Maven:
+2. Build the project using Maven (before this step, follow the instructions in the sections Database Configuration and Configuration Files application.properties):
 
 ```mvn clean install ```
 
