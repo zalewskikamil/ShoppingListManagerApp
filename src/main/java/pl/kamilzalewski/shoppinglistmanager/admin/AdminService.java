@@ -9,7 +9,7 @@ import org.springframework.stereotype.Service;
 import pl.kamilzalewski.shoppinglistmanager.email.EmailBody;
 import pl.kamilzalewski.shoppinglistmanager.email.EmailService;
 import pl.kamilzalewski.shoppinglistmanager.user.User;
-import pl.kamilzalewski.shoppinglistmanager.user.UserNotFoundException;
+import pl.kamilzalewski.shoppinglistmanager.user.exceptions.UserNotFoundException;
 import pl.kamilzalewski.shoppinglistmanager.user.UserRepository;
 import pl.kamilzalewski.shoppinglistmanager.user.UserRole;
 

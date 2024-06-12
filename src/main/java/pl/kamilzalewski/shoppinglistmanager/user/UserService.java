@@ -13,6 +13,9 @@ import pl.kamilzalewski.shoppinglistmanager.jwt.AccessToken;
 import pl.kamilzalewski.shoppinglistmanager.jwt.AccessTokenService;
 import pl.kamilzalewski.shoppinglistmanager.jwt.RefreshToken;
 import pl.kamilzalewski.shoppinglistmanager.jwt.RefreshTokenService;
+import pl.kamilzalewski.shoppinglistmanager.user.exceptions.AccountAlreadyEnabledException;
+import pl.kamilzalewski.shoppinglistmanager.user.exceptions.UserAlreadyExistException;
+import pl.kamilzalewski.shoppinglistmanager.user.exceptions.UserNotFoundException;
 
 @Service
 @RequiredArgsConstructor

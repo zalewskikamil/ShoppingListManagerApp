@@ -11,7 +11,7 @@ import pl.kamilzalewski.shoppinglistmanager.jwt.JwtService;
 import pl.kamilzalewski.shoppinglistmanager.jwt.TokenValidityException;
 import pl.kamilzalewski.shoppinglistmanager.jwt.TokenNotFoundException;
 import pl.kamilzalewski.shoppinglistmanager.user.User;
-import pl.kamilzalewski.shoppinglistmanager.user.UserNotFoundException;
+import pl.kamilzalewski.shoppinglistmanager.user.exceptions.UserNotFoundException;
 import pl.kamilzalewski.shoppinglistmanager.user.UserRepository;
 
 import java.util.Objects;

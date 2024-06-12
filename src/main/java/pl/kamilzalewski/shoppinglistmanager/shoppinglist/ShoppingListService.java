@@ -15,7 +15,7 @@ import pl.kamilzalewski.shoppinglistmanager.share.ShareDto;
 import pl.kamilzalewski.shoppinglistmanager.share.SharePageResponse;
 import pl.kamilzalewski.shoppinglistmanager.share.ShareService;
 import pl.kamilzalewski.shoppinglistmanager.user.User;
-import pl.kamilzalewski.shoppinglistmanager.user.UserNotFoundException;
+import pl.kamilzalewski.shoppinglistmanager.user.exceptions.UserNotFoundException;
 import pl.kamilzalewski.shoppinglistmanager.user.UserRepository;
 
 import java.time.LocalDateTime;

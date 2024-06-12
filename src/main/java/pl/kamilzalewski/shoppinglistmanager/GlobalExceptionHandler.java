@@ -16,9 +16,9 @@ import pl.kamilzalewski.shoppinglistmanager.password.IncorrectPasswordException;
 import pl.kamilzalewski.shoppinglistmanager.share.ImpossibleShareException;
 import pl.kamilzalewski.shoppinglistmanager.share.ShareNotFoundException;
 import pl.kamilzalewski.shoppinglistmanager.shoppinglist.ShoppingListNotFoundException;
-import pl.kamilzalewski.shoppinglistmanager.user.AccountAlreadyEnabledException;
-import pl.kamilzalewski.shoppinglistmanager.user.UserAlreadyExistException;
-import pl.kamilzalewski.shoppinglistmanager.user.UserNotFoundException;
+import pl.kamilzalewski.shoppinglistmanager.user.exceptions.AccountAlreadyEnabledException;
+import pl.kamilzalewski.shoppinglistmanager.user.exceptions.UserAlreadyExistException;
+import pl.kamilzalewski.shoppinglistmanager.user.exceptions.UserNotFoundException;
 
 @RestControllerAdvice
 public class GlobalExceptionHandler {
