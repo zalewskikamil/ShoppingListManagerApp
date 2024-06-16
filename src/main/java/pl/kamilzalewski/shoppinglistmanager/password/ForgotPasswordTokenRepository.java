@@ -1,6 +1,7 @@
 package pl.kamilzalewski.shoppinglistmanager.password;
 
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import pl.kamilzalewski.shoppinglistmanager.user.User;
 
@@ -13,4 +14,8 @@ public interface ForgotPasswordTokenRepository extends JpaRepository<ForgotPassw
 
     @Query("Select fp from ForgotPasswordToken fp where fp.user = ?1")
     Optional<ForgotPasswordToken> findByUser(User user);
+
+    @Modifying
+    @Query("Delete from ForgotPasswordToken  fp where fp.id = ?1")
+    void delete(Integer id);
 }

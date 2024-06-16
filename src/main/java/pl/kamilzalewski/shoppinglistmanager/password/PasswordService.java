@@ -1,5 +1,8 @@
 package pl.kamilzalewski.shoppinglistmanager.password;
 
+import jakarta.persistence.EntityManager;
+import jakarta.persistence.PersistenceContext;
+import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -8,11 +11,11 @@ import org.springframework.stereotype.Service;
 import pl.kamilzalewski.shoppinglistmanager.email.EmailBody;
 import pl.kamilzalewski.shoppinglistmanager.email.EmailService;
 import pl.kamilzalewski.shoppinglistmanager.jwt.JwtService;
-import pl.kamilzalewski.shoppinglistmanager.jwt.TokenValidityException;
 import pl.kamilzalewski.shoppinglistmanager.jwt.TokenNotFoundException;
+import pl.kamilzalewski.shoppinglistmanager.jwt.TokenValidityException;
 import pl.kamilzalewski.shoppinglistmanager.user.User;
-import pl.kamilzalewski.shoppinglistmanager.user.exceptions.UserNotFoundException;
 import pl.kamilzalewski.shoppinglistmanager.user.UserRepository;
+import pl.kamilzalewski.shoppinglistmanager.user.exceptions.UserNotFoundException;
 
 import java.util.Objects;
 import java.util.Optional;
@@ -23,6 +26,9 @@ public class PasswordService {
 
     private final static Logger LOGGER = LoggerFactory.getLogger(PasswordService.class);
     private static final long EXPIRATION_TIME_IN_MINUTES = 15;
+
+    @PersistenceContext
+    private EntityManager entityManager;
 
     private final ForgotPasswordTokenRepository forgotPasswordTokenRepository;
     private final JwtService jwtService;
@@ -46,6 +52,7 @@ public class PasswordService {
         return "Password has been changed";
     }
 
+    @Transactional
     public String sendForgotPasswordMessage(String userEmail) {
         User user = userRepository.findByUsername(userEmail)
                 .orElseThrow(() -> new UserNotFoundException("User not found. Please provide valid email"));
@@ -57,12 +64,12 @@ public class PasswordService {
                         emailService.createForgotPasswordUrl(forgotPasswordToken))
                 .build();
         emailService.sendMessage(emailBody);
-        LOGGER.info("The user {} changed forgotten password", userEmail);
+        LOGGER.info("The user {} generate forgotten password message", userEmail);
         return "Email send for verification. Please check your mailbox";
     }
 
     public String changeForgottenPassword(ChangeForgottenPasswordRequest changeForgottenPasswordRequest,
-                                                          String token) {
+                                          String token) {
         if (!Objects.equals(changeForgottenPasswordRequest.newPassword(), changeForgottenPasswordRequest.repeatNewPassword())) {
             throw new IncorrectPasswordException("Please enter the new password again");
         }
@@ -80,10 +87,17 @@ public class PasswordService {
     }
 
     private String generateForgotPasswordToken(User user) {
-        Optional<ForgotPasswordToken> fpTokenByUser = forgotPasswordTokenRepository.findByUser(user);
-        fpTokenByUser.ifPresent(forgotPasswordTokenRepository::delete);
+        Optional<ForgotPasswordToken> existingTokenOptional = forgotPasswordTokenRepository.findByUser(user);
+        if (existingTokenOptional.isPresent()) {
+            ForgotPasswordToken existingToken = existingTokenOptional.get();
+            forgotPasswordTokenRepository.delete(existingToken.getId());
+            entityManager.flush();
+            LOGGER.info("Removed existing refresh token with ID {}", existingToken.getId());
+        }
+        String newTokenValue = jwtService.generateToken(user, EXPIRATION_TIME_IN_MINUTES);
         ForgotPasswordToken forgotPasswordToken = ForgotPasswordToken.builder()
-                .token(jwtService.generateToken(user, EXPIRATION_TIME_IN_MINUTES))
+                .user(user)
+                .token(newTokenValue)
                 .build();
         ForgotPasswordToken savedForgotPasswordToken = forgotPasswordTokenRepository.save(forgotPasswordToken);
         return savedForgotPasswordToken.getToken();
